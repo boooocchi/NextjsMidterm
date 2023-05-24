@@ -20,10 +20,10 @@ pool.query(sql, (err, data) => {
 
   if (data?.length === 0) {
     console.log(`Table 'Blog' does not exist`);
+    seedDB();
   } else {
     console.log(`Table 'Blog' exists`);
   }
-  seedDB();
 });
 
 const seedDB = async () => {

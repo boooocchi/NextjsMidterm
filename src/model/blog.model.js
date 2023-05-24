@@ -14,14 +14,15 @@ module.exports = class Blog {
   save() {
     const query = {
       name: "insert-blog",
-      text: "INSERT INTO Blog (title, author, article,date,image) VALUES ($1, $2, $3)",
-      values: [this.title, this.author, this.article, this.date, thisiamge]
+      text: "INSERT INTO blog (title, author, article,date,image) VALUES ($1, $2, $3, $4,$5)",
+      values: [this.title, this.author, this.article, this.date, this.image]
     };
     return db.query(query);
   }
 
   static find() {
     const sql = "SELECT * FROM Blog ORDER BY blog_id DESC";
+
     return db.query(sql);
   }
 
@@ -32,7 +33,7 @@ module.exports = class Blog {
 
   static updateOne(data) {
     const sql =
-      "UPDATE Blogs SET title = $1, author = $2, article = $3 , date=$4, image=$5 WHERE (blog_id = $6)";
+      "UPDATE Blog SET title = $1, author = $2, article = $3 , date=$4, image=$5 WHERE (blog_id = $6)";
     const params = [
       data.title,
       data.author,
