@@ -28,7 +28,8 @@ const Create = () => {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    handleChange({ target: { name: "date", value: date } });
+    const isoDate = date.toISOString(); // Convert date to ISO 8601 format
+    handleChange({ target: { name: "date", value: isoDate } });
   };
 
   const handleSubmit = (e) => {
@@ -91,7 +92,8 @@ const Create = () => {
                 selected={selectedDate}
                 onChange={handleDateChange}
                 className="border px-3 py-2 tracking-wider w-full text-[#9BA3AF]"
-                value="Date"
+                dateFormat="yyyy-MM-dd"
+                placeholderText="Select a date"
               />
               <textarea
                 name="article"
@@ -104,7 +106,7 @@ const Create = () => {
 
               <label
                 htmlFor="imageInput"
-                className="file-input-label inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md cursor-pointer"
+                className="file-input-label inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 cursor-pointer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
