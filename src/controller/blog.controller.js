@@ -20,8 +20,8 @@ exports.postCreateBlog = (req, res) => {
   console.log(req.body);
 
   const { title, author, article, date } = req.body;
-
-  const image = req.file ? req.file.path : null;
+  console.log(req.file);
+  const image = req.file ? req.file : null;
 
   const newBlog = new Blog(title, author, article, date, image);
   newBlog
@@ -32,20 +32,20 @@ exports.postCreateBlog = (req, res) => {
     .catch((err) => console.error(err.message));
 };
 
-exports.getEditBlogById = (req, res) => {
-  const id = req.params.id;
-  Blog.findById(id)
-    .then((rows) => {
-      res.json(rows);
-    })
-    .catch((err) => console.error(err.message));
-};
+// exports.getEditBlogById = (req, res) => {
+//   const id = req.params.id;
+//   Blog.findById(id)
+//     .then((rows) => {
+//       res.json(rows);
+//     })
+//     .catch((err) => console.error(err.message));
+// };
 
 exports.postEditBlogById = (req, res) => {
   const id = req.params.id;
   const { title, author, article, date, image } = req.body;
 
-  const dataToUpdate = { id, title, author, article, date, image };
+  const dataToUpdate = { title, author, article, date, image, id };
 
   Blog.updateOne(dataToUpdate)
     .then(() => {

@@ -45,18 +45,6 @@ const seedDB = async () => {
       console.log("Successful creation of the 'Blog' table");
     }
   );
-
-  await pool.query(
-    `
-        INSERT INTO Blog (Title, Author, Article, Date,Image) VALUES
-        ('My fery first one', 'Kota Ito', 'Hazy one', '2023-05-21','https://static.wikileaf.com/assets/strains/strain/Lavender_Haze.jpg')`,
-    (err) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log("Successful creation of 1 article");
-    }
-  );
 };
 
 module.exports = pool;

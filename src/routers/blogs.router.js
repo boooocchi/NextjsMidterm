@@ -22,7 +22,6 @@ const upload = multer({ storage: storage });
 const {
   getAllBlog,
   postCreateBlog,
-  getEditBlogById,
   postEditBlogById,
   deleteBlog
 } = require("../controller/blog.controller");
@@ -30,7 +29,7 @@ const {
 // Define routes
 router.get("/all", getAllBlog);
 router.post("/create", upload.single("image"), postCreateBlog);
-router.get("/edit/:id", getEditBlogById);
+
 router.post("/edit/:id", postEditBlogById);
 router.delete("/delete/:id", deleteBlog);
 

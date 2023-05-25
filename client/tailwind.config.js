@@ -8,7 +8,8 @@ export default {
         main: ["Oswald", "sans-serif"]
       },
       colors: {
-        accent: "#ffe436"
+        accent: "#d6d30ee2",
+        grayblack: "#9BA3AF"
       }
     }
   },

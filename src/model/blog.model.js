@@ -32,6 +32,7 @@ module.exports = class Blog {
   }
 
   static updateOne(data) {
+    console.log(data);
     const sql =
       "UPDATE Blog SET title = $1, author = $2, article = $3 , date=$4, image=$5 WHERE (blog_id = $6)";
     const params = [
@@ -39,7 +40,8 @@ module.exports = class Blog {
       data.author,
       data.article,
       data.date,
-      data.image
+      data.image,
+      data.id
     ];
     return db.query(sql, params);
   }

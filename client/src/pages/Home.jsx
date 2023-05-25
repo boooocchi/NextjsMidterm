@@ -29,11 +29,7 @@ function App() {
       <Hero></Hero>
       <main className="grid md:grid-cols-3 w-[90%] mx-auto gap-[1rem] mt-[7rem] mb-[7rem]">
         {blogsData.map((blogData) => (
-          <Card
-            title={blogData.title}
-            image={blogData.image}
-            date={blogData.date}
-          ></Card>
+          <Card key={blogData.blog_id} {...blogData}></Card>
         ))}
       </main>
     </>
