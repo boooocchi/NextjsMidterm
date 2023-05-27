@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-
+const methodOverride = require("method-override");
 // Parse JSON request bodies
 app.use(express.json());
 
 const blogsRouter = require("./src/routers/blogs.router");
-
+app.use(methodOverride("_method"));
 const PORT = process.env.PORT || 8000;
 
 // app.get("/api/blogs", (req, res) => res.json({ msg: "blogs" }));

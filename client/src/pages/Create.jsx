@@ -36,15 +36,13 @@ const Create = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Create a new FormData object
     const formDataObj = new FormData();
 
-    // Append the form fields to the FormData object
     for (const field in formData) {
       formDataObj.append(field, formData[field]);
     }
+    console.log([...formDataObj]);
 
-    // Make the API request to submit the form data
     fetch("/api/blogs/create", {
       method: "POST",
       body: formDataObj
@@ -63,12 +61,13 @@ const Create = () => {
         // Handle any network errors or exceptions
         console.error("Network error:", error);
       });
+    console.log(formData);
     navigate("/");
   };
 
   return (
-    <section className="pt-[7rem] w-3/5 mx-auto mb-[7rem] tracking-wider">
-      <h1 className="text-center mb-10 text-[1.3rem]">Create a Snippet</h1>
+    <section className="pt-[7rem] w-3/5 max-mobile:w-4/5 mx-auto mb-[7rem] tracking-wider max-w-[1000px]">
+      <h1 className="text-center mb-7 text-[1.3rem]">CREATE</h1>
 
       <form onSubmit={handleSubmit}>
         <div className="form-horizontal">
@@ -135,11 +134,13 @@ const Create = () => {
               />
             </label>
             {formData.image && (
-              <img
-                src={URL.createObjectURL(formData.image)}
-                alt="Selected Image"
-                className="w-10 h-10 object-cover"
-              />
+              <div className="w-[50%] max-sm:w-full">
+                <img
+                  src={URL.createObjectURL(formData.image)}
+                  alt="Selected Image"
+                  className="object-cover  grayscale"
+                />
+              </div>
             )}
             <input
               type="submit"

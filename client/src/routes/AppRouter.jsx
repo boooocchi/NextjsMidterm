@@ -10,6 +10,7 @@ import {
 //pages
 import { Home, Create, Edit, Article } from "@/pages";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 //redux
 
@@ -18,12 +19,13 @@ function AppRoute() {
     <>
       <BrowserRouter>
         <Header></Header>
-        <Routes>
+        <Routes className="min-h-screen">
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<Create />} />
           <Route path="/edit/:id" element={<Edit />} />
           <Route path="/article/:id" element={<Article />} />
         </Routes>
+        <Footer></Footer>
       </BrowserRouter>
     </>
   );

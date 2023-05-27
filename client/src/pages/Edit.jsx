@@ -6,35 +6,41 @@ import "react-datepicker/dist/react-datepicker.css";
 const Edit = () => {
   const location = useLocation();
   const { blog_id, title, date, article, image, author } = location.state;
+  console.log(location.state);
+  const fileInfo = JSON.parse(image);
+
+  const fileObject = new File([], fileInfo.filename, {
+    type: fileInfo.mimetype
+  });
+  fileObject.path = fileInfo.path;
+  const [formData2, setFormData] = useState({
+    title: title,
+    author: author,
+    article: article,
+    date: date,
+    image: fileObject
+  });
+
+  const [isImgChanged, setIsImageChanged] = useState(false);
+
+  // let imgPath = JSON.parse(image).filename;
 
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
-  const [formData, setFormData] = useState({
-    title: title || "", // Use empty string if title is null or undefined
-    author: author || "", // Use empty string if author is null or undefined
-    article: article || "", // Use empty string if article is null or undefined
-    date: date || "", // Use empty string if date is null or undefined
-    image: null
-  });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
     if (name === "image") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        image: files[0] // Store the File object directly
-      }));
+      setFormData({
+        ...formData2,
+        image: files[0]
+      });
+      setIsImageChanged(true);
     } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value
-      }));
+      setFormData({ ...formData2, [name]: value });
     }
   };
-  useEffect(() => {
-    console.log(formData.image);
-  });
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -46,39 +52,57 @@ const Edit = () => {
     e.preventDefault();
     const formDataObj = new FormData();
 
-    for (const field in formData) {
-      formDataObj.append(field, formData[field]);
+    for (const field in formData2) {
+      formDataObj.append(field, formData2[field]);
     }
 
-    console.log([...formDataObj);
+    console.log([...formDataObj]);
 
-    // Make the API request to submit the form data
     fetch(`/api/blogs/edit/${blog_id}`, {
       method: "POST",
       body: formDataObj
     })
       .then((response) => {
         if (response.ok) {
-          // Handle the successful response
           console.log("Blog edited successfully");
-          // Redirect or perform any other actions
         } else {
-          // Handle the error response
-          console.error("Failed to create blog");
+          console.error("Failed to edit");
         }
       })
       .catch((error) => {
-        // Handle any network errors or exceptions
         console.error("Network error:", error);
       });
     navigate("/");
   };
+
+  let ImageTag;
+  if (isImgChanged) {
+    ImageTag = (
+      <div className="w-[30%] max-smw-full grayscale">
+        <img
+          src={URL.createObjectURL(formData2.image)}
+          alt="Selected Image"
+          className="object-cover"
+        />
+      </div>
+    );
+  } else {
+    ImageTag = (
+      <div className="w-[30%] max-sm:w-full grayscale">
+        <img
+          src={`/api/${formData2.image.name}`}
+          alt="Selected Image"
+          className="object-cover"
+        />
+      </div>
+    );
+  }
   useEffect(() => {
-    console.log(formData.title);
-  }, [formData.title]);
+    console.log(formData2);
+  }, []);
 
   return (
-    <section className="pt-[7rem] w-3/5 mx-auto mb-[7rem] tracking-wider">
+    <section className="pt-[7rem] w-3/5 mx-auto mb-[7rem] tracking-wider max-mobile:w-4/5">
       <h1 className="text-center mb-10 text-[1.3rem]">Edit a Snippet</h1>
 
       <form onSubmit={handleSubmit}>
@@ -89,7 +113,7 @@ const Edit = () => {
               type="text"
               placeholder="Title"
               className="border px-3 py-2 tracking-wider"
-              value={formData.title}
+              value={formData2.title}
               onChange={handleChange}
             />
             <input
@@ -97,7 +121,7 @@ const Edit = () => {
               type="text"
               placeholder="author"
               className="border px-3 py-2 tracking-wider"
-              value={formData.author}
+              value={formData2.author}
               onChange={handleChange}
             />
             <DatePicker
@@ -105,15 +129,15 @@ const Edit = () => {
               onChange={handleDateChange}
               className="border px-3 py-2 tracking-wider w-full text-[#000000]"
               dateFormat="yyyy-MM-dd"
+              value={formData2.date.slice(0, 10)}
             />
             <textarea
               name="article"
               type="text"
               placeholder="Article"
               className="border px-3 py-2 tracking-wider h-[15rem]"
-              value={formData.article}
+              value={formData2.article}
               onChange={handleChange}
-              initialvalue={article}
             />
 
             <label
@@ -145,14 +169,7 @@ const Edit = () => {
                 className="hidden"
               />
             </label>
-            {/* {formData.image && (
-              <img
-                src={URL.createObjectURL(formData.image)}
-                alt="Selected Image"
-                className="w-10 h-10 object-cover"
-                // value={(src = `/api/${image}`)}
-              />
-            )} */}
+            {ImageTag}
             <input
               type="submit"
               value="Edit"
@@ -163,9 +180,18 @@ const Edit = () => {
             <button className=" btn-outline-dark cancel inline-block hover:text-[#9BA3AF]">
               <Link to="/">← back Home</Link>
             </button>
-            <a className="hover:text-grayblack pb-[0.1px] border-b border-accent leading-[1rem] hover:border-transparent text-[1rem] inline-block cursor-pointer text-accent">
-              Delete this snippet
-            </a>
+
+            <form
+              action={`/api/blogs/delete/${blog_id}?_method=DELETE`}
+              method="POST"
+            >
+              <button
+                className="hover:text-grayblack pb-[0.1px] border-b border-accent leading-[1rem] hover:border-transparent text-[1rem] inline-block cursor-pointer text-accent"
+                type="submit"
+              >
+                Delete this snippet
+              </button>
+            </form>
           </div>
         </div>
       </form>

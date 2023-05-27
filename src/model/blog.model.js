@@ -34,7 +34,7 @@ module.exports = class Blog {
   static updateOne(data) {
     console.log(data);
     const sql =
-      "UPDATE Blog SET title = $1, author = $2, article = $3 , date=$4, image=$5 WHERE (blog_id = $6)";
+      "UPDATE blog SET title = $1, author = $2, article = $3 , date=$4, image=$5 WHERE (blog_id = $6)";
     const params = [
       data.title,
       data.author,

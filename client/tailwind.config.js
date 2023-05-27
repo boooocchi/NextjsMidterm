@@ -10,6 +10,9 @@ export default {
       colors: {
         accent: "#d6d30ee2",
         grayblack: "#9BA3AF"
+      },
+      screens: {
+        "mobile": "480px"
       }
     }
   },
