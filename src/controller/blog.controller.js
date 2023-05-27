@@ -12,8 +12,6 @@ exports.getAllBlog = (req, res) => {
 };
 
 exports.postCreateBlog = (req, res) => {
-  console.log(req.body);
-
   const { title, author, article, date } = req.body;
 
   const image = req.file ? req.file : null;
