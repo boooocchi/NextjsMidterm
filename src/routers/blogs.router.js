@@ -21,13 +21,16 @@ const {
   getAllBlog,
   postCreateBlog,
   postEditBlogById,
-  deleteBlog
+  deleteBlog,
+  getBlogById
 } = require("../controller/blog.controller");
 
 router.get("/all", getAllBlog);
 router.post("/create", upload.single("image"), postCreateBlog);
+router.get("/:id", getBlogById);
 
 router.post("/edit/:id", upload.single("image"), postEditBlogById);
 router.delete("/delete/:id", deleteBlog);
 
+router.get("");
 module.exports = router;

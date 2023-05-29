@@ -3,10 +3,10 @@
 const db = require("../service/postgres");
 
 module.exports = class Comment {
-  constructor(blog_id, commenter, comment, date) {
-    this.blog_id = blog_id;
-    this.commenter = commenter;
+  constructor(comment, commenter, blog_id) {
     this.comment = comment;
+    this.commenter = commenter;
+    this.blog_id = blog_id;
     this.date = new Date();
   }
 
@@ -40,7 +40,11 @@ module.exports = class Comment {
   // }
 
   static deleteOne(id) {
-    const sql = "DELETE FROM comment WHERE comment_id = $1";
-    return db.query(sql, [id]);
+    const query = {
+      name: "delete-comment",
+      text: "DELETE FROM comment WHERE comment_id = $1",
+      values: [id]
+    };
+    return db.query(query);
   }
 };

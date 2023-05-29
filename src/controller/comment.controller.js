@@ -1,9 +1,10 @@
 const Comment = require("../model/comment.model");
 
 exports.getComments = (req, res) => {
-  Comment.findById()
+  const id = req.params.id;
+  Comment.findById(id)
     .then((rows) => {
-      res.json();
+      res.json(rows);
     })
     .catch((err) => {
       console.error(err);
@@ -12,6 +13,7 @@ exports.getComments = (req, res) => {
 };
 
 exports.postCreateComment = (req, res) => {
+  console.log(req.body);
   const { comment, commenter, blog_id } = req.body;
 
   const newComment = new Comment(comment, commenter, blog_id);
@@ -27,10 +29,11 @@ exports.deleteComment = (req, res) => {
   const id = req.params.id;
   Comment.deleteOne(id)
     .then(() => {
-      console.log("successfully delete the comment");
-      res.redirect("/");
+      console.log("Successfully deleted the comment");
+      res.sendStatus(200);
     })
     .catch((err) => {
       console.error(err.message);
+      res.sendStatus(500);
     });
 };

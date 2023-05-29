@@ -45,7 +45,6 @@ const seedDB = async () => {
       console.log("Successful creation of the 'Blog' table");
     }
   );
-
   await pool.query(`DROP TABLE IF EXISTS Comment`);
 
   await pool.query(

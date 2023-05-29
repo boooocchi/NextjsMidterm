@@ -11,6 +11,16 @@ exports.getAllBlog = (req, res) => {
     });
 };
 
+exports.getBlogById = (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id)
+    .then((row) => res.json(row))
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "failed to fetch blog" });
+    });
+};
+
 exports.postCreateBlog = (req, res) => {
   const { title, author, article, date } = req.body;
 
