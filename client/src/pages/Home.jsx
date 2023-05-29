@@ -21,10 +21,8 @@ function App() {
       setIsLoading(false);
     };
 
-    if (blogsData.length === 0) {
-      fetchBlogData();
-    }
-  }, [blogsData]);
+    fetchBlogData();
+  }, []);
 
   return (
     <>

@@ -21,7 +21,7 @@ module.exports = class Blog {
   }
 
   static find() {
-    const sql = "SELECT * FROM Blog ORDER BY blog_id DESC";
+    const sql = "SELECT * FROM Blog ORDER BY date DESC";
 
     return db.query(sql);
   }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="max-md:h-[2.5rem] h-[4rem] w-full bg-[#eeeeee8b]  font-title px-10 flex items-center fixed z-10 max-mobile:px-5">
+    <header className="max-md:h-[2.5rem] h-[4rem] w-full bg-[#eeeeee8b]  font-title px-10 flex items-center fixed z-[99] max-mobile:px-5">
       <nav className="flex justify-between items-center w-full text-[0.8rem] max-w-[1280px] mx-auto">
         <Link
           to="/"
