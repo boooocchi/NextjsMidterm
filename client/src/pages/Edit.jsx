@@ -6,19 +6,13 @@ import "react-datepicker/dist/react-datepicker.css";
 const Edit = () => {
   const location = useLocation();
   const { blog_id, title, date, article, image, author } = location.state;
-  console.log(location.state);
-  const fileInfo = JSON.parse(image);
 
-  const fileObject = new File([], fileInfo.filename, {
-    type: fileInfo.mimetype
-  });
-  fileObject.path = fileInfo.path;
   const [formData2, setFormData] = useState({
     title: title,
     author: author,
     article: article,
     date: date,
-    image: fileObject
+    image: null
   });
 
   const [isImgChanged, setIsImageChanged] = useState(false);
@@ -56,8 +50,6 @@ const Edit = () => {
       formDataObj.append(field, formData2[field]);
     }
 
-    console.log([...formDataObj]);
-
     fetch(`/api/blogs/edit/${blog_id}`, {
       method: "POST",
       body: formDataObj
@@ -75,28 +67,28 @@ const Edit = () => {
     navigate("/");
   };
 
-  let ImageTag;
-  if (isImgChanged) {
-    ImageTag = (
-      <div className="w-[30%] max-smw-full grayscale">
-        <img
-          src={URL.createObjectURL(formData2.image)}
-          alt="Selected Image"
-          className="object-cover"
-        />
-      </div>
-    );
-  } else {
-    ImageTag = (
-      <div className="w-[30%] max-sm:w-full grayscale">
-        <img
-          src={`/api/${formData2.image.name}`}
-          alt="Selected Image"
-          className="object-cover"
-        />
-      </div>
-    );
-  }
+  // let ImageTag;
+  // if (isImgChanged) {
+  //   ImageTag = (
+  //     <div className="w-[30%] max-smw-full grayscale">
+  //       <img
+  //         src={URL.createObjectURL(formData2.image)}
+  //         alt="Selected Image"
+  //         className="object-cover"
+  //       />
+  //     </div>
+  //   );
+  // } else {
+  //   ImageTag = (
+  //     <div className="w-[30%] max-sm:w-full grayscale">
+  //       <img
+  //         src={`/api/${formData2.image.name}`}
+  //         alt="Selected Image"
+  //         className="object-cover"
+  //       />
+  //     </div>
+  //   );
+  // }
   useEffect(() => {
     console.log(formData2);
   }, []);
@@ -169,7 +161,17 @@ const Edit = () => {
                 className="hidden"
               />
             </label>
-            {ImageTag}
+            <div className="w-[50%] max-sm:w-full grayscale">
+              {!isImgChanged ? (
+                <img
+                  src={image}
+                  alt="Selected Image"
+                  className="object-cover  grayscale"
+                />
+              ) : (
+                <img src={URL.createObjectURL(formData2.image)} alt="" />
+              )}
+            </div>
             <input
               type="submit"
               value="Edit"

@@ -13,14 +13,14 @@ function App() {
         setIsLoading(true);
         const response = await fetch("/api/blogs/all");
         const data = await response.json();
-        const { rows } = data;
-        setBlogsData(rows);
+
+        setBlogsData(data);
       } catch (error) {
         console.error("Error fetching blog data:", error);
       }
       setIsLoading(false);
     };
-
+    console.log(blogsData);
     fetchBlogData();
   }, []);
 
@@ -32,8 +32,8 @@ function App() {
       </h1>
 
       {isLoading && (
-        <div class="w-full flex items-center justify-center h-[2rem]">
-          <div class="px-3  text-xs   text-center text-white   animate-pulse w-[5rem] h-[2rem]  dark:bg-[#333] text-title font-[200] leading-[2rem]">
+        <div className="w-full flex items-center justify-center h-[2rem]">
+          <div className="px-3  text-xs   text-center text-white   animate-pulse w-[5rem] h-[2rem]  dark:bg-[#333] text-title font-[200] leading-[2rem]">
             loading...
           </div>
         </div>

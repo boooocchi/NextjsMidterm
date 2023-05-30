@@ -3,19 +3,28 @@
 const db = require("../service/postgres");
 
 module.exports = class Blog {
-  constructor(title, author, article, date, image) {
+  constructor(title, author, article, date, image, mimetype) {
     this.title = title;
     this.author = author;
     this.article = article;
     this.date = date;
     this.image = image;
+
+    this.mimetype = mimetype;
   }
 
   save() {
     const query = {
       name: "insert-blog",
-      text: "INSERT INTO blog (title, author, article,date,image) VALUES ($1, $2, $3, $4,$5)",
-      values: [this.title, this.author, this.article, this.date, this.image]
+      text: "INSERT INTO blog (title, author, article,date,image,image_mime) VALUES ($1, $2, $3, $4,$5,$6)",
+      values: [
+        this.title,
+        this.author,
+        this.article,
+        this.date,
+        this.image,
+        this.mimetype
+      ]
     };
     return db.query(query);
   }
@@ -33,16 +42,20 @@ module.exports = class Blog {
 
   static updateOne(data) {
     console.log(data);
-    const sql =
-      "UPDATE blog SET title = $1, author = $2, article = $3 , date=$4, image=$5 WHERE (blog_id = $6)";
-    const params = [
-      data.title,
-      data.author,
-      data.article,
-      data.date,
-      data.image,
-      data.id
-    ];
+    let sql =
+      "UPDATE blog SET title = $1, author = $2, article = $3, date = $4";
+    const params = [data.title, data.author, data.article, data.date];
+
+    if (data.image) {
+      sql += ", image = $5, image_mime = $6";
+      params.push(data.image, data.mimetype);
+      sql += " WHERE blog_id = $7";
+      params.push(data.id);
+    } else {
+      sql += " WHERE blog_id = $5";
+      params.push(data.id);
+    }
+
     return db.query(sql, params);
   }
 

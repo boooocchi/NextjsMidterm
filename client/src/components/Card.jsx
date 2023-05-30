@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Card = (props) => {
-  const imagePath = JSON.parse(props.image).filename;
-
   const handleClick = () => {
     window.scrollTo(0, 0);
   };
-
+  useEffect(() => {
+    console.log(props.image);
+  }, []);
   const handleImageHover = (event) => {
     event.currentTarget.querySelector("img").style.transform = "scale(1.1)";
   };
@@ -26,8 +26,8 @@ const Card = (props) => {
     >
       <div className="absolute  w-full h-full">
         <img
-          src={`/api/${imagePath}`}
-          alt=""
+          src={props.image}
+          alt="Blog Image"
           className="w-full h-full object-cover grayscale duration-300"
         />
       </div>

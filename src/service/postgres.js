@@ -12,13 +12,20 @@ const pool = new Pool({
   }
 });
 
-const sql = `SELECT to_regclass('Blog')`;
+// const sql = `SELECT to_regclass('Blog')`;
+const sql = `SELECT EXISTS (
+  SELECT FROM
+      information_schema.tables
+  WHERE
+      table_schema LIKE 'public' AND
+      table_type LIKE 'BASE TABLE' AND
+      table_name = 'blog'
+  );`;
 pool.query(sql, (err, data) => {
   if (err) {
     console.log(err);
   }
-
-  if (data?.length === 0) {
+  if (!data.rows[0].exists) {
     console.log(`Table 'Blog' does not exist`);
     seedDB();
   } else {
@@ -27,6 +34,7 @@ pool.query(sql, (err, data) => {
 });
 
 const seedDB = async () => {
+  await pool.query(`DROP TABLE IF EXISTS comment`);
   await pool.query(`DROP TABLE IF EXISTS Blog`);
 
   await pool.query(
@@ -36,7 +44,8 @@ const seedDB = async () => {
       Author VARCHAR(100) NOT NULL,
       Article TEXT NOT NULL,
       Date DATE DEFAULT CURRENT_DATE,
-      Image TEXT NOT NULL
+      Image BYTEA NOT NULL,
+      Image_MIME VARCHAR(100)
     )`,
     (err) => {
       if (err) {
