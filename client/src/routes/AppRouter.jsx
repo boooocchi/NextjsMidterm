@@ -19,7 +19,7 @@ function AppRoute() {
     <>
       <BrowserRouter>
         <Header></Header>
-        <Routes className="min-h-screen">
+        <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<Create />} />
           <Route path="/edit/:id" element={<Edit />} />

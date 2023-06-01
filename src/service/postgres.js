@@ -12,66 +12,74 @@ const pool = new Pool({
   }
 });
 
-// const sql = `SELECT to_regclass('Blog')`;
-const sql = `SELECT EXISTS (
-  SELECT FROM
-      information_schema.tables
-  WHERE
-      table_schema LIKE 'public' AND
-      table_type LIKE 'BASE TABLE' AND
-      table_name = 'blog'
+// Check if the table "Blog" exists
+const checkTableQuery = `
+  SELECT EXISTS (
+    SELECT FROM information_schema.tables
+    WHERE table_schema = 'public'
+    AND table_type = 'BASE TABLE'
+    AND table_name = 'blog'
   );`;
-pool.query(sql, (err, data) => {
+
+pool.query(checkTableQuery, (err, data) => {
   if (err) {
-    console.log(err);
-  }
-  if (!data.rows[0].exists) {
-    console.log(`Table 'Blog' does not exist`);
-    seedDB();
+    console.error(err);
   } else {
-    console.log(`Table 'Blog' exists`);
+    const tableExists = data.rows[0].exists;
+    if (!tableExists) {
+      console.log("Table 'Blog' does not exist");
+      seedDB();
+    } else {
+      console.log("Table 'Blog' exists");
+    }
   }
 });
 
+// Seed the database with tables
 const seedDB = async () => {
-  await pool.query(`DROP TABLE IF EXISTS comment`);
-  await pool.query(`DROP TABLE IF EXISTS Blog`);
+  try {
+    await pool.query(`DROP TABLE IF EXISTS "comment"`);
+    await pool.query(`DROP TABLE IF EXISTS "blog"`);
+    await pool.query(`DROP TABLE IF EXISTS "user"`);
 
-  await pool.query(
-    `CREATE TABLE Blog (
-      Blog_ID SERIAL PRIMARY KEY,
-      Title VARCHAR(100) NOT NULL,
-      Author VARCHAR(100) NOT NULL,
-      Article TEXT NOT NULL,
-      Date DATE DEFAULT CURRENT_DATE,
-      Image BYTEA NOT NULL,
-      Image_MIME VARCHAR(100)
-    )`,
-    (err) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log("Successful creation of the 'Blog' table");
-    }
-  );
-  await pool.query(`DROP TABLE IF EXISTS Comment`);
+    await pool.query(`
+    CREATE TABLE "user" (
+      user_id SERIAL PRIMARY KEY,
+      email VARCHAR(100) NOT NULL,
+      password VARCHAR(100) NOT NULL,
+      name VARCHAR(100) NOT NULL
+    )
+  `);
 
-  await pool.query(
-    `CREATE TABLE Comment (
-      Comment_ID SERIAL PRIMARY KEY,
-      Blog_ID INT NOT NULL,
-      Commenter VARCHAR(100) NOT NULL,
-      Comment TEXT NOT NULL,
-      Date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (Blog_ID) REFERENCES Blog (Blog_ID) ON DELETE CASCADE
-    )`,
-    (err) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log("Successful creation of the 'Comment' table");
-    }
-  );
+    await pool.query(`
+      CREATE TABLE "blog" (
+        blog_id SERIAL PRIMARY KEY,
+        title VARCHAR(100) NOT NULL,
+        user_id INT NOT NULL,
+        article TEXT NOT NULL,
+        date DATE DEFAULT CURRENT_DATE,
+        image BYTEA NOT NULL,
+        image_mime VARCHAR(100),
+        FOREIGN KEY (user_id) REFERENCES "user" (user_id) ON DELETE CASCADE
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE "comment" (
+        comment_id SERIAL PRIMARY KEY,
+        blog_id INT NOT NULL,
+        user_id INT NOT NULL,
+        comment TEXT NOT NULL,
+        date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (blog_id) REFERENCES "blog" (blog_id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES "user" (user_id) ON DELETE CASCADE
+      )
+    `);
+
+    console.log("Tables created successfully");
+  } catch (err) {
+    console.error(err.message);
+  }
 };
 
 module.exports = pool;
