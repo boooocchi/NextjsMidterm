@@ -55,11 +55,12 @@ const seedDB = async () => {
       CREATE TABLE "blog" (
         blog_id SERIAL PRIMARY KEY,
         title VARCHAR(100) NOT NULL,
-        user_id INT NOT NULL,
+        author VARCHAR(100) NOT NULL,
         article TEXT NOT NULL,
         date DATE DEFAULT CURRENT_DATE,
         image BYTEA NOT NULL,
         image_mime VARCHAR(100),
+        user_id VARCHAR(10) NOT NULL,
         FOREIGN KEY (user_id) REFERENCES "user" (user_id) ON DELETE CASCADE
       )
     `);
@@ -68,9 +69,10 @@ const seedDB = async () => {
       CREATE TABLE "comment" (
         comment_id SERIAL PRIMARY KEY,
         blog_id INT NOT NULL,
-        user_id INT NOT NULL,
+        commenter TEXT NOT NULL,
         comment TEXT NOT NULL,
         date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        user_id INT NOT NULL,
         FOREIGN KEY (blog_id) REFERENCES "blog" (blog_id) ON DELETE CASCADE,
         FOREIGN KEY (user_id) REFERENCES "user" (user_id) ON DELETE CASCADE
       )

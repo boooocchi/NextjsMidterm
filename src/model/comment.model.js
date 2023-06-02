@@ -3,18 +3,25 @@
 const db = require("../service/postgres");
 
 module.exports = class Comment {
-  constructor(comment, commenter, blog_id) {
+  constructor(comment, commenter, blog_id, user_id) {
     this.comment = comment;
     this.commenter = commenter;
     this.blog_id = blog_id;
     this.date = new Date();
+    this.user_id = user_id;
   }
 
   save() {
     const query = {
       name: "insert-comment",
-      text: "INSERT INTO comment (blog_id,commenter,comment,date) VALUES ($1, $2, $3, $4)",
-      values: [this.blog_id, this.commenter, this.comment, this.date]
+      text: "INSERT INTO comment (blog_id,commenter,comment,date,user_id) VALUES ($1, $2, $3, $4,$5)",
+      values: [
+        this.blog_id,
+        this.commenter,
+        this.comment,
+        this.date,
+        this.user_id
+      ]
     };
     return db.query(query);
   }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useLocation, Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CiPaperplane, CiTrash } from "react-icons/ci";
 
@@ -11,8 +11,9 @@ const Article = () => {
   const commentRef = useRef();
   const commenterRef = useRef();
   const [commentData, setCommentData] = useState({
-    commenter: null,
-    comment: null
+    commenter: localStorage.getItem("userName"),
+    comment: null,
+    user_id: localStorage.getItem("userID")
   });
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -145,18 +146,20 @@ const Article = () => {
           <span className="text-[1rem] ml-auto mr-0 max-md:text-[0.8rem]">
             by {articleData?.author}
           </span>
-          <div className="w-full flex justify-end">
-            <Link
-              to={`/edit/${id}`}
-              state={articleData}
-              className="hover:text-grayblack pb-[0px] border-b border-black mb-0 leading-[1rem] hover:border-transparent relative max-md:text-[0.9rem]"
-              onClick={() => {
-                window.scrollTo(0, 0);
-              }}
-            >
-              Edit
-            </Link>
-          </div>
+          {localStorage.getItem("userName") === articleData?.author && (
+            <div className="w-full flex justify-end">
+              <Link
+                to={`/edit/${id}`}
+                state={articleData}
+                className="hover:text-grayblack pb-[0px] border-b border-black mb-0 leading-[1rem] hover:border-transparent relative max-md:text-[0.9rem]"
+                onClick={() => {
+                  window.scrollTo(0, 0);
+                }}
+              >
+                Edit
+              </Link>
+            </div>
+          )}
 
           <h1 className="text-[1rem] mt-[7rem] border-b pb-1">Comments</h1>
           {!comments.length && (
@@ -170,16 +173,19 @@ const Article = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="tracking-wide">{commentRow.comment}</p>
-                  <form
-                    onSubmit={(e) => deleteHandler(e, commentRow.comment_id)}
-                  >
-                    <button
-                      className="hover:text-grayblack pb-[0.1px] hover:border-transparent text-[1.1rem] inline-block cursor-pointer text-accent"
-                      type="submit"
+                  {commentRow.commenter ===
+                    localStorage.getItem("userName") && (
+                    <form
+                      onSubmit={(e) => deleteHandler(e, commentRow.comment_id)}
                     >
-                      <CiTrash />
-                    </button>
-                  </form>
+                      <button
+                        className="hover:text-grayblack pb-[0.1px] hover:border-transparent text-[1.1rem] inline-block cursor-pointer text-accent"
+                        type="submit"
+                      >
+                        <CiTrash />
+                      </button>
+                    </form>
+                  )}
                 </div>
               </div>
             ))}
@@ -208,14 +214,14 @@ const Article = () => {
 
             {commentModal && (
               <motion.form onSubmit={onSubmitHandler} className="flex flex-col">
-                <input
+                {/* <input
                   name="commenter"
                   type="text"
                   placeholder="Commenter"
                   ref={commenterRef}
                   onBlur={() => inputChangeHandler("commenter")}
                   className="border mb-3 px-2 py-1"
-                />
+                /> */}
                 <textarea
                   name="comment"
                   placeholder="Comment"

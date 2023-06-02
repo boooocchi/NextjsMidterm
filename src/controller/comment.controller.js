@@ -14,9 +14,9 @@ exports.getComments = (req, res) => {
 
 exports.postCreateComment = (req, res) => {
   console.log(req.body);
-  const { comment, commenter, blog_id } = req.body;
+  const { comment, commenter, blog_id, user_id } = req.body;
 
-  const newComment = new Comment(comment, commenter, blog_id);
+  const newComment = new Comment(comment, commenter, blog_id, user_id);
   newComment
     .save()
     .then(() => {

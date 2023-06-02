@@ -1,15 +1,18 @@
 import React, { useState, useContext, useRef } from "react";
 import useInput from "../hooks/use-input";
 import AuthContext from "../store/auth-context";
+import { toast } from "react-toastify";
 
 const Login = (props) => {
   const authCtx = useContext(AuthContext);
+  const [btnDisable, setBtnDisable] = useState(false);
 
   const [inputPassword, setInputPassword] = useState("");
   const [inputEmail, setInputEmail] = useState("");
   //Ref
   const passwordRef = useRef(null);
   const emailRef = useRef(null);
+  const [registerMode, setRegisterMode] = useState(false);
 
   //login input handlers
   const loginPasswordHandler = () => {
@@ -34,17 +37,39 @@ const Login = (props) => {
   //login submit handler
   const submitLoginHandler = (event) => {
     event.preventDefault();
-    console.log(inputEmail, inputPassword);
     if (inputEmail && inputPassword) {
+      setBtnDisable(true);
       fetchUser(inputEmail, inputPassword)
         .then((data) => {
-          console.log(data.rows[0]);
           const { user_id, email, name } = data.rows[0];
           authCtx.onLogin(user_id, email, name);
+          toast.success("Login successul!!", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+          });
+          // setTimeout(() => props.onClose(), 1000);
           props.onClose();
         })
-        .catch((error) => {
-          console.log("Error:", error);
+        .catch(() => {
+          toast.success("wrong Email or Password", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored"
+          });
+        })
+        .finally(() => {
+          setBtnDisable(false);
         });
       // authCtx.onLogin(emailState.value, passwordState.value);
     } else if (!inputEmail) {
@@ -121,7 +146,7 @@ const Login = (props) => {
           emailReset();
           passwordReset();
         } else {
-          console.error("Failed to create blog");
+          console.error("Failed to create a user");
         }
       })
       .catch((error) => {
@@ -130,7 +155,6 @@ const Login = (props) => {
       });
   };
 
-  const [registerMode, setRegisterMode] = useState(false);
   const modalCloseHandler = () => {
     props.onClose();
   };
@@ -140,194 +164,200 @@ const Login = (props) => {
   };
 
   return (
-    <div
-      className="h-screen w-screen flex justify-center bg-[#11111181] fixed z-[100] font-title font-light min-w-[330px]"
-      onClick={modalCloseHandler}
-    >
+    <>
       <div
-        onClick={modalContentClickHandler}
-        className="flex flex-col items-center justify-center w-[300px] max-sm:w-[70%] py-8 h-screen lg:py-0 fixed"
+        className="h-screen w-screen flex justify-center bg-[#11111181] fixed z-[100] font-title font-light min-w-[330px]"
+        onClick={modalCloseHandler}
       >
-        <div className="w-full shadow sm:max-w-xl xl:p-0 bg-[#e0e0e0da]">
-          <div className="p-6 space-y-4 md:space-y-5 sm:p-8 relative">
-            <button
-              onClick={modalCloseHandler}
-              className="absolute right-[3%] top-[-0.5%] text-black text-[1.4rem]"
-            >
-              ×
-            </button>
-            {registerMode && (
-              <>
-                <h1 className="text-xl font-title font-light leading-tight text-gray-900 md:text-2xl tracking-wider text-center">
-                  Sign in
-                </h1>
-                <form
-                  className="space-y-4 md:space-y-6"
-                  action="/api/login"
-                  onSubmit={formSubmission}
-                >
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block mb-2 text-sm font-title text-[#111] font-normal"
-                    >
-                      Your email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      className="bg-white border text-[#111] sm:text-sm block w-full p-2.5"
-                      placeholder="snippets@blog.com"
-                      required
-                      onBlur={emailInputBlurHandler}
-                      onChange={emailInputHandler}
-                      value={enteredEmail}
-                    />
-                    {emailError && <p className="error-text">Invalid email</p>}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block mb-2 text-sm font-title text-[#111] font-normal"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      id="password"
-                      placeholder="••••••••"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                      required
-                      onBlur={passwordInputBlurHandler}
-                      onChange={passwordInputHandler}
-                      value={enteredPassword}
-                    />
-                    {passwordError && (
-                      <p className="error-text">
-                        The password must be at least 6 characters long and
-                        contain at least one digit.
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="username"
-                      className="block mb-2 text-sm font-title text-[#111] font-normal"
-                    >
-                      User name
-                    </label>
-                    <input
-                      type="text"
-                      name="username"
-                      id="username"
-                      placeholder="Mr.Hazy"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                      required
-                      onBlur={usernameInputBlurHandler}
-                      onChange={usernameInputHandler}
-                      value={enteredUsername}
-                    />
-                    {usernameError && (
-                      <p className="error-text">Username is required</p>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-start"></div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full text-white bg-[#111] hover:bg-primary-700 focus:ring-primary-300 font-medium text-sm px-5 py-2.5 text-center hover:bg-[#494949]"
-                  >
+        <div
+          onClick={modalContentClickHandler}
+          className="flex flex-col items-center justify-center w-[300px] max-sm:w-[70%] py-8 h-screen lg:py-0 fixed"
+        >
+          <div className="w-full shadow sm:max-w-xl xl:p-0 bg-[#e0e0e0da]">
+            <div className="p-6 space-y-4 md:space-y-5 sm:p-8 relative">
+              <button
+                onClick={modalCloseHandler}
+                className="absolute right-[3%] top-[-0.5%] text-black text-[1.4rem]"
+              >
+                ×
+              </button>
+              {registerMode && (
+                <>
+                  <h1 className="text-xl font-title font-light leading-tight text-gray-900 md:text-2xl tracking-wider text-center">
                     Sign in
-                  </button>
-                  <p className="text-sm font-light text-[black]">
-                    Already have an account?{" "}
-                    <button
-                      onClick={() => {
-                        setRegisterMode(true);
-                      }}
-                      className="font-medium text-primary-600 hover:underline"
-                    >
-                      Log in
-                    </button>
-                  </p>
-                </form>
-              </>
-            )}
-            {!registerMode && (
-              <>
-                <h1 className="text-xl font-title font-light leading-tight text-gray-900 md:text-2xl tracking-wider text-center">
-                  Login
-                </h1>
-                <form
-                  className="space-y-4 md:space-y-6"
-                  onSubmit={submitLoginHandler}
-                >
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block mb-2 text-sm font-title text-[#111] font-normal"
-                    >
-                      Your email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      className="bg-white border text-[#111] sm:text-sm block w-full p-2.5"
-                      placeholder="snippets@blog.com"
-                      required
-                      ref={emailRef}
-                      onChange={loginEmailHandler}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block mb-2 text-sm font-title text-[#111] font-normal"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      id="password"
-                      placeholder="••••••••"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                      required
-                      onChange={loginPasswordHandler}
-                      ref={passwordRef}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-start"></div>
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full text-white bg-[#111] hover:bg-primary-700 focus:ring-primary-300 font-medium text-sm px-5 py-2.5 text-center hover:bg-[#494949]"
+                  </h1>
+                  <form
+                    className="space-y-4 md:space-y-6"
+                    action="/api/login"
+                    onSubmit={formSubmission}
                   >
-                    Sign in
-                  </button>
-                  <p className="text-sm font-light text-[black]">
-                    Don't have an account yet?{" "}
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="block mb-2 text-sm font-title text-[#111] font-normal"
+                      >
+                        Your email
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        className="bg-white border text-[#111] sm:text-sm block w-full p-2.5"
+                        placeholder="snippets@blog.com"
+                        required
+                        onBlur={emailInputBlurHandler}
+                        onChange={emailInputHandler}
+                        value={enteredEmail}
+                      />
+                      {emailError && (
+                        <p className="error-text">Invalid email</p>
+                      )}
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="password"
+                        className="block mb-2 text-sm font-title text-[#111] font-normal"
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="••••••••"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                        required
+                        onBlur={passwordInputBlurHandler}
+                        onChange={passwordInputHandler}
+                        value={enteredPassword}
+                      />
+                      {passwordError && (
+                        <p className="error-text">
+                          The password must be at least 6 characters long and
+                          contain at least one digit.
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="username"
+                        className="block mb-2 text-sm font-title text-[#111] font-normal"
+                      >
+                        User name
+                      </label>
+                      <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        placeholder="Mr.Hazy"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                        required
+                        onBlur={usernameInputBlurHandler}
+                        onChange={usernameInputHandler}
+                        value={enteredUsername}
+                      />
+                      {usernameError && (
+                        <p className="error-text">Username is required</p>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-start"></div>
+                    </div>
                     <button
-                      onClick={() => {
-                        setRegisterMode(true);
-                      }}
-                      className="font-medium text-primary-600 hover:underline"
+                      type="submit"
+                      className="w-full text-white bg-[#111] hover:bg-primary-700 focus:ring-primary-300 font-medium text-sm px-5 py-2.5 text-center hover:bg-[#494949]"
                     >
-                      Sign up
+                      Sign in
                     </button>
-                  </p>
-                </form>
-              </>
-            )}
+                    <p className="text-sm font-light text-[black]">
+                      Already have an account?{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setRegisterMode(false);
+                        }}
+                        className="font-medium text-primary-600 hover:underline"
+                      >
+                        Log in
+                      </button>
+                    </p>
+                  </form>
+                </>
+              )}
+              {!registerMode && (
+                <>
+                  <h1 className="text-xl font-title font-light leading-tight text-gray-900 md:text-2xl tracking-wider text-center">
+                    Login
+                  </h1>
+                  <form
+                    className="space-y-4 md:space-y-6"
+                    onSubmit={submitLoginHandler}
+                  >
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="block mb-2 text-sm font-title text-[#111] font-normal"
+                      >
+                        Your email
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        className="bg-white border text-[#111] sm:text-sm block w-full p-2.5"
+                        placeholder="snippets@blog.com"
+                        required
+                        ref={emailRef}
+                        onChange={loginEmailHandler}
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="password"
+                        className="block mb-2 text-sm font-title text-[#111] font-normal"
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        placeholder="••••••••"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                        required
+                        onChange={loginPasswordHandler}
+                        ref={passwordRef}
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-start"></div>
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full text-white bg-[#111] hover:bg-primary-700 focus:ring-primary-300 font-medium text-sm px-5 py-2.5 text-center hover:bg-[#494949]"
+                      disabled={btnDisable}
+                    >
+                      {btnDisable ? "Logging in..." : "Login"}
+                    </button>
+                    <p className="text-sm font-light text-[black]">
+                      Don't have an account yet?{" "}
+                      <button
+                        onClick={() => {
+                          setRegisterMode(true);
+                        }}
+                        className="font-medium text-primary-600 hover:underline"
+                      >
+                        Sign in
+                      </button>
+                    </p>
+                  </form>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

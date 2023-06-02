@@ -5,9 +5,7 @@ const Card = (props) => {
   const handleClick = () => {
     window.scrollTo(0, 0);
   };
-  useEffect(() => {
-    console.log(props.image);
-  }, []);
+
   const handleImageHover = (event) => {
     event.currentTarget.querySelector("img").style.transform = "scale(1.1)";
   };

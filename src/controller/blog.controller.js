@@ -40,10 +40,20 @@ exports.getBlogById = (req, res) => {
 };
 
 exports.postCreateBlog = (req, res) => {
-  const { title, author, article, date } = req.body;
+  const { title, author, article, date, user_id } = req.body;
+  console.log(req.body);
   const { buffer: image, mimetype } = req.file || null;
 
-  const newBlog = new Blog(title, author, article, date, image, mimetype);
+  const newBlog = new Blog(
+    title,
+    author,
+    article,
+    date,
+    image,
+    mimetype,
+    user_id
+  );
+  console.log(newBlog);
   newBlog
     .save()
     .then(() => {

@@ -1,17 +1,22 @@
-import React, { useState } from "react";
-import { Link, useNavigate, useNavigation } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import AuthContext from "../store/auth-context";
 
 const Create = () => {
+  const authCtx = useContext(AuthContext);
+  console.log(localStorage.getItem("userID"));
+
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
-    author: "",
+    author: localStorage.getItem("userName"),
     article: "",
     date: "",
-    image: null
+    image: null,
+    user_id: localStorage.getItem("userID")
   });
 
   const handleChange = (e) => {
@@ -80,14 +85,14 @@ const Create = () => {
               value={formData.title}
               onChange={handleChange}
             />
-            <input
+            {/* <input
               name="author"
               type="text"
               placeholder="author"
               className="border px-3 py-2 tracking-wider"
               value={formData.author}
               onChange={handleChange}
-            />
+            /> */}
             <DatePicker
               selected={selectedDate}
               onChange={handleDateChange}

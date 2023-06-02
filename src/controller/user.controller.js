@@ -22,7 +22,8 @@ exports.registerUser = (req, res) => {
   newUser
     .save()
     .then(() => {
-      console.log("successfully create a comment");
+      console.log("successfully create a user");
+      res.status(201).json({ message: "User created successfully" });
     })
-    .catch((err) => console.error(err.message));
+    .catch((err) => console.error("hi how are you"));
 };

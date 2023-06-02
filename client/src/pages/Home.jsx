@@ -20,7 +20,6 @@ function App() {
       }
       setIsLoading(false);
     };
-    console.log(blogsData);
     fetchBlogData();
   }, []);
 
@@ -39,11 +38,11 @@ function App() {
         </div>
       )}
 
-      {/* <main className="grid md:grid-cols-2  lg:grid-cols-3 w-[80%] mx-auto gap-[2rem]  mb-[7rem] max-w-[1280px] gap-y-[2rem]">
+      <main className="grid md:grid-cols-2  lg:grid-cols-3 w-[80%] mx-auto gap-[2rem]  mb-[7rem] max-w-[1280px] gap-y-[2rem]">
         {blogsData.map((blogData) => (
           <Card key={blogData.blog_id} {...blogData}></Card>
         ))}
-      </main> */}
+      </main>
     </>
   );
 }
