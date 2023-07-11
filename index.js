@@ -7,14 +7,10 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "client", "dist")));
 const blogsRouter = require("./src/routers/blogs.router");
-
 const commentRouter = require("./src/routers/comment.router");
-
 const userRouter = require("./src/routers/user.router");
 
 app.use(methodOverride("_method"));
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log("server started"));
 
 app.use("/api", express.static(path.join(process.cwd(), "src", "uploads")));
 app.use("/api/blogs", blogsRouter);
@@ -24,3 +20,6 @@ app.use("/api/user", userRouter);
 app.get("*", (req, res) =>
   res.sendFile(path.join(__dirname, "client", "dist", "index.html"))
 );
+
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => console.log("server started"));
