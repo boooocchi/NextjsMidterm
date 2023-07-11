@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const methodOverride = require("method-override");
+require("dotenv").config();
 // Parse JSON request bodies
 app.use(express.json());
 

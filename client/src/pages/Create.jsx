@@ -1,11 +1,9 @@
-import React, { useState, useContext } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AuthContext from "../store/auth-context";
 
 const Create = () => {
-  const authCtx = useContext(AuthContext);
   console.log(localStorage.getItem("userID"));
 
   const navigate = useNavigate();

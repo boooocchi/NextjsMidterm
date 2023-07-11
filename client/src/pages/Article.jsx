@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CiPaperplane, CiTrash } from "react-icons/ci";
@@ -232,7 +232,6 @@ const Article = () => {
                 <div className="flex items-center justify-between mt-3">
                   <button
                     type="button"
-                    layout
                     className="cursor-pointer ml-2 text-[1rem] text-grayblack"
                     onClick={(e) => {
                       e.stopPropagation();
