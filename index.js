@@ -14,7 +14,9 @@ const userRouter = require("./src/routers/user.router");
 app.use(methodOverride("_method"));
 const PORT = process.env.PORT || 8000;
 
-app.get("*",(res.req)=>res.sendFile(path.join(__dirname,"client","dist","index.html")));
+app.get("*", (res, req) =>
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"))
+);
 app.use("/api", express.static(path.join(process.cwd(), "src", "uploads")));
 app.use("/api/blogs", blogsRouter);
 app.use("/api/comment", commentRouter);
