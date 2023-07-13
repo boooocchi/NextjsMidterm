@@ -20,6 +20,28 @@ exports.getAllBlog = (req, res) => {
     });
 };
 
+exports.getPersonalBlog = (req, res) => {
+  const userid = req.params.userid;
+  console.log(req.params.id);
+  Blog.findByUserId(userid)
+    .then(({ rows }) => {
+      const remappedRows = rows.map((row) => {
+        const imageData = row.image;
+        const base64Image = Buffer.from(imageData).toString("base64");
+        const imageSrc = `data:${row.image_mime};base64, ${base64Image}`;
+        return {
+          ...row,
+          image: imageSrc
+        };
+      });
+      res.json(remappedRows);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Failed to fetch blogs" });
+    });
+};
+
 exports.getBlogById = (req, res) => {
   const id = req.params.id;
   Blog.findById(id)

@@ -4,8 +4,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const Create = () => {
-  console.log(localStorage.getItem("userID"));
-
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
   const [formData, setFormData] = useState({

@@ -23,9 +23,11 @@ const {
   postCreateBlog,
   postEditBlogById,
   deleteBlog,
-  getBlogById
+  getBlogById,
+  getPersonalBlog
 } = require("../controller/blog.controller");
 
+router.get("/yours/:userid", getPersonalBlog);
 router.get("/all", getAllBlog);
 router.post("/create", upload.single("image"), postCreateBlog);
 router.get("/:id", getBlogById);

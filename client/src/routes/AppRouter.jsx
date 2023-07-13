@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 //pages
-import { Home, Create, Edit, Article } from "@/pages";
+import { Home, Create, Edit, Article, Yours } from "@/pages";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { ToastContainer } from "react-toastify";
@@ -50,6 +50,7 @@ function AppRoute() {
           <Route
             element={<PrivateRoute user={localStorage.getItem("userName")} />}
           >
+            <Route path="/blog/:userid" element={<Yours />} />
             <Route path="/create" element={<Create />} />
             <Route path="/edit/:id" element={<Edit />} />
           </Route>

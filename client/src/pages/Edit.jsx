@@ -67,32 +67,6 @@ const Edit = () => {
     navigate("/");
   };
 
-  // let ImageTag;
-  // if (isImgChanged) {
-  //   ImageTag = (
-  //     <div className="w-[30%] max-smw-full grayscale">
-  //       <img
-  //         src={URL.createObjectURL(formData2.image)}
-  //         alt="Selected Image"
-  //         className="object-cover"
-  //       />
-  //     </div>
-  //   );
-  // } else {
-  //   ImageTag = (
-  //     <div className="w-[30%] max-sm:w-full grayscale">
-  //       <img
-  //         src={`/api/${formData2.image.name}`}
-  //         alt="Selected Image"
-  //         className="object-cover"
-  //       />
-  //     </div>
-  //   );
-  // }
-  useEffect(() => {
-    console.log(formData2);
-  }, []);
-
   return (
     <section className="pt-[7rem] w-3/5 mx-auto mb-[7rem] tracking-wider max-mobile:w-4/5">
       <h1 className="text-center mb-10 text-[1.3rem]">Edit a Snippet</h1>

@@ -1,17 +1,18 @@
-import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Login from "./Login";
 import AuthContext from "../store/auth-context";
 import { toast } from "react-toastify";
 
 const Header = () => {
+  const location = useLocation();
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
   const [loginModal, setLoginModal] = useState(false);
   const loginBtnHandler = () => {
     setLoginModal(true);
   };
-
+  console.log(location.pathname);
   const logoutBtnHandler = () => {
     authCtx.onLogout();
     navigate("/");
@@ -30,8 +31,8 @@ const Header = () => {
   const loginModalCloseHandler = () => {
     setLoginModal(false);
   };
+  const userId = localStorage.getItem("userID");
 
-  console.log(authCtx.userInfo);
   return (
     <>
       {loginModal && <Login onClose={loginModalCloseHandler} />}
@@ -39,31 +40,46 @@ const Header = () => {
         <nav className="flex justify-between items-center w-full text-[0.8rem] max-w-[1280px] mx-auto">
           <Link
             to="/"
-            className="tracking-widest border-b-[2px] border-[#ffe436] cursor-pointer max-md:text-[0.8rem]"
+            className={`tracking-widest border-b-2  hover:border-[#ffe436] cursor-pointer max-md:text-[0.8rem] ${
+              location.pathname === "/"
+                ? "border-[#ffe436]"
+                : "border-transparent"
+            }`}
           >
             HOME
           </Link>
           <div className="flex gap-5 text-[0.7rem] tracking-widest relative top-[2px] max-mobile:gap-3">
-            <span className="border-b-2 border-transparent hover:y-[-1rem] hover:border-b-2 hover:border-[#ffe436] cursor-pointer">
-              ABOUT
-            </span>
-            <span>/</span>
-            <span className="border-b-2 border-transparent hover:y-[-1rem] hover:border-b-2 hover:border-[#ffe436] cursor-pointer">
-              SNIPPETS
-            </span>
+            {localStorage.getItem("userID") && (
+              <>
+                <Link
+                  to={`/blog/${userId}`}
+                  className={`border-b-2  hover:y-[-1rem] hover:border-b-2 hover:border-[#ffe436] cursor-pointer ${
+                    location.pathname === `/blog/${userId}`
+                      ? "border-[#ffe436]"
+                      : "border-transparent"
+                  }`}
+                >
+                  YOURS
+                </Link>
+              </>
+            )}
 
             {localStorage.getItem("userID") && (
               <>
                 <span>/</span>
                 <Link
                   to="/create"
-                  className="border-b-2 border-transparent hover:y-[-1rem] hover:border-b-2 hover:border-[#ffe436] cursor-pointer"
+                  className={`border-b-2  hover:y-[-1rem] hover:border-b-2 hover:border-[#ffe436] cursor-pointer ${
+                    location.pathname === "/create"
+                      ? "border-[#ffe436]"
+                      : "border-transparent"
+                  }`}
                 >
                   CREATE
                 </Link>
+                <span>/</span>
               </>
             )}
-            <span>/</span>
             {!localStorage.getItem("userID") ? (
               <button
                 className="border-b-2 border-transparent hover:y-[-1rem] hover:border-b-2 hover:border-[#ffe436] cursor-pointer"

@@ -42,8 +42,12 @@ module.exports = class Blog {
     return db.query(sql, [id]);
   }
 
+  static findByUserId(userid) {
+    const sql = "SELECT * FROM Blog WHERE user_id = $1";
+    return db.query(sql, [userid]);
+  }
+
   static updateOne(data) {
-    console.log(data);
     let sql =
       "UPDATE blog SET title = $1, author = $2, article = $3, date = $4";
     const params = [data.title, data.author, data.article, data.date];
