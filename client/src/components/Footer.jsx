@@ -3,7 +3,7 @@ import {
   AiFillYoutube,
   AiFillLinkedin,
   AiFillGithub
-} from "react-icons/Ai";
+} from "react-icons/ai";
 const Footer = () => {
   return (
     <div className="flex justify-center items-center flex-col mt-5 mb-5">
